@@ -1,13 +1,16 @@
 package com.example.travis.familymapclient;
 
+import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 public class LoginFragment extends FragmentActivity {
     private Button signInButton;
@@ -64,12 +67,27 @@ public class LoginFragment extends FragmentActivity {
                 }
             }
         });
+        serverHostInput.setText("10.0.0.197");
+        serverPortInput.setText("8080");
+        userNameInput.setText("traviswg");
+        passwordInput.setText("twerk216");
         signInButton = findViewById(R.id.button);
         registerButton = findViewById(R.id.button2);
         addSignInListeners(serverHostInput,serverPortInput, userNameInput, passwordInput);
         addRegisterListeners(serverHostInput, serverPortInput, userNameInput, passwordInput, firstNameInput, lastNameInput, emailInput, radioGroup);
     }
 
+
+    public void loginClick(View view) {
+        String serverHost = serverHostInput.getText().toString();
+        String serverPort = serverPortInput.getText().toString();
+        String userName = userNameInput.getText().toString();
+        String password = passwordInput.getText().toString();
+        MyAsyncTask myAsyncTask = new MyAsyncTask(serverHost, serverPort, userName, password);
+        myAsyncTask.execute();
+        Toast.makeText(getApplicationContext(), "Done", Toast.LENGTH_LONG).show();
+
+    }
     public boolean registerRadioCheck(EditText serverHostInput, EditText serverPortInput, EditText userNameInput, EditText passwordInput,
                                       EditText firstNameInput, EditText lastNameInput, EditText emailInput) {
         if (serverHostInput.getText().length() > 0 && serverPortInput.getText().length() > 0 && userNameInput.getText().length() > 0
