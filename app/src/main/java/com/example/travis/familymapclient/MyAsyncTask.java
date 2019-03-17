@@ -4,6 +4,13 @@ import android.os.AsyncTask;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.travis.familymapclient.Requests.LoginRequest;
+import com.example.travis.familymapclient.Requests.PersonRequest;
+import com.example.travis.familymapclient.Result.LoginResult;
+import com.example.travis.familymapclient.Result.PersonResult;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -18,64 +25,68 @@ import java.sql.Connection;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class MyAsyncTask extends AsyncTask<Void, Void, Void> {
+public class MyAsyncTask extends AsyncTask<Void, Void, Object> {
     private String serverHost;
     private String serverPort;
     private String userName;
     private String password;
+    private String authToken;
 
-    public MyAsyncTask(String serverHost, String serverPort, String userName, String password) {
+    public String getAuthToken() {
+        return authToken;
+    }
+
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
+    }
+
+    private Integer reqCode;
+    private ServerProxy serverProxy;
+    private LoginFragment fragment;
+
+    private final int LOGIN_REQ = 1;
+    private final int GET_PEOPLE_REQ = 2;
+
+    public MyAsyncTask(String serverHost, String serverPort, String userName, String password, Integer reqCode, LoginFragment frag) {
         this.serverHost = serverHost;
         this.serverPort = serverPort;
         this.userName = userName;
         this.password = password;
+        this.reqCode = reqCode;
+        this.serverProxy = ServerProxy.getInstance();
+        this.serverProxy.setServerHost(serverHost);
+        this.serverProxy.setServerPort(serverPort);
+        this.fragment = frag;
     }
     @Override
-    protected Void doInBackground(Void... voids) {
-        String url = "http://" + serverHost + ":" + serverPort +
-                "/user/login";
-        try {
-            URL address = new URL(url);
-            HttpURLConnection conn = (HttpURLConnection) address.openConnection();
-            conn.setReadTimeout(5000);
-            conn.setRequestMethod("POST");
-            conn.setDoOutput(true);
-            conn.connect();
-
-            JSONObject preRequestBody = new JSONObject();
-            preRequestBody.put("userName", userName);
-            preRequestBody.put("password", password);
-
-            OutputStream OSS = conn.getOutputStream();
-            OutputStreamWriter osw = new OutputStreamWriter(OSS, "UTF-8");
-            osw.write(preRequestBody.toString());
-            osw.flush();
-            osw.close();
-
-            System.out.println(getResponse(conn));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }catch (org.json.JSONException exc) {
-            exc.printStackTrace();
-        }catch(IOException ex) {
-            ex.printStackTrace();
+    protected Object doInBackground(Void... voids) {
+        if (reqCode == LOGIN_REQ) {
+            LoginRequest loginRequest = new LoginRequest(userName, password);
+            LoginResult result = serverProxy.login(loginRequest);
+            return result;
         }
-
+        else if (reqCode == GET_PEOPLE_REQ) {
+            PersonRequest peopleRequest = new PersonRequest(userName, authToken);
+            PersonResult result = serverProxy.getPeople(peopleRequest);
+            return result;
+        }
         return null;
     }
-
-    private String getResponse(HttpURLConnection conn) {
-        try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            StringBuilder sb = new StringBuilder();
-            String output;
-            while ((output = br.readLine()) != null) {
-                sb.append(output);
+    @Override
+    protected void onPostExecute(Object result) {
+        if (reqCode == LOGIN_REQ) {
+            LoginResult loginResult = (LoginResult) result;
+            fragment.setResult(loginResult);
+            if (((LoginResult) result).isSuccessful() == true) {
+                MyAsyncTask loginTask = new MyAsyncTask(serverHost, serverPort, userName, password,2,fragment);
+                loginTask.setAuthToken(loginResult.getAuthToken());
+                loginTask.execute();
             }
-            return sb.toString();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            else {
+                Toast.makeText(fragment.getApplicationContext(), "Log in Failed, Try Again",
+                        Toast.LENGTH_LONG).show();
+            }
         }
     }
+
 }

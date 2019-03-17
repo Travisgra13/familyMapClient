@@ -3,6 +3,7 @@ package com.example.travis.familymapclient;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.app.Person;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -11,6 +12,8 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+
+import com.example.travis.familymapclient.Result.LoginResult;
 
 public class LoginFragment extends FragmentActivity {
     private Button signInButton;
@@ -26,6 +29,8 @@ public class LoginFragment extends FragmentActivity {
     private EditText firstNameInput;
     private EditText lastNameInput;
     private EditText emailInput;
+
+    private LoginResult result;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +72,7 @@ public class LoginFragment extends FragmentActivity {
                 }
             }
         });
+
         serverHostInput.setText("10.0.0.197");
         serverPortInput.setText("8080");
         userNameInput.setText("traviswg");
@@ -83,11 +89,14 @@ public class LoginFragment extends FragmentActivity {
         String serverPort = serverPortInput.getText().toString();
         String userName = userNameInput.getText().toString();
         String password = passwordInput.getText().toString();
-        MyAsyncTask myAsyncTask = new MyAsyncTask(serverHost, serverPort, userName, password);
+        MyAsyncTask myAsyncTask = new MyAsyncTask(serverHost, serverPort, userName, password, 1, this);
         myAsyncTask.execute();
-        Toast.makeText(getApplicationContext(), "Done", Toast.LENGTH_LONG).show();
-
     }
+
+    public void setResult(LoginResult result) {
+        this.result = result;
+    }
+
     public boolean registerRadioCheck(EditText serverHostInput, EditText serverPortInput, EditText userNameInput, EditText passwordInput,
                                       EditText firstNameInput, EditText lastNameInput, EditText emailInput) {
         if (serverHostInput.getText().length() > 0 && serverPortInput.getText().length() > 0 && userNameInput.getText().length() > 0
