@@ -3,8 +3,10 @@ package com.example.travis.familymapclient;
 import android.util.Base64;
 import android.webkit.HttpAuthHandler;
 
+import com.example.travis.familymapclient.Requests.EventRequest;
 import com.example.travis.familymapclient.Requests.LoginRequest;
 import com.example.travis.familymapclient.Requests.PersonRequest;
+import com.example.travis.familymapclient.Result.EventResult;
 import com.example.travis.familymapclient.Result.LoadResult;
 import com.example.travis.familymapclient.Result.LoginResult;
 import com.example.travis.familymapclient.Result.PersonResult;
@@ -104,7 +106,30 @@ public class ServerProxy {
             ex.printStackTrace();
         }
         return null;
+    }
+
+    public EventResult getEvents(EventRequest eventRequest) {
+        String url = "http://" + serverHost + ":" + serverPort +
+                "/event";
+        try {
+            URL address = new URL(url);
+            HttpURLConnection conn = (HttpURLConnection) address.openConnection();
+            conn.setReadTimeout(5000);
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Authorization", eventRequest.getAuthToken());
+            conn.connect();
+
+            Gson gson = new Gson();
+            EventResult eventResult = gson.fromJson(getResponse(conn), EventResult.class);
+            return eventResult;
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }catch(IOException ex) {
+            ex.printStackTrace();
         }
+        return null;
+    }
+
     private String getResponse(HttpURLConnection conn) {
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));

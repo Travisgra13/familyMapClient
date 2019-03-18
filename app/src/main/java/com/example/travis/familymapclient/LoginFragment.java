@@ -14,6 +14,7 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.travis.familymapclient.Result.LoginResult;
+import com.example.travis.familymapclient.UserFamilyData.PersonFamily;
 
 public class LoginFragment extends FragmentActivity {
     private Button signInButton;
@@ -31,7 +32,15 @@ public class LoginFragment extends FragmentActivity {
     private EditText emailInput;
 
     private LoginResult result;
+    private PersonFamily userFamily;
 
+    public PersonFamily getUserFamily() {
+        return userFamily;
+    }
+
+    public void setUserFamily(PersonFamily userFamily) {
+        this.userFamily = userFamily;
+    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,7 +82,7 @@ public class LoginFragment extends FragmentActivity {
             }
         });
 
-        serverHostInput.setText("10.0.0.197");
+        serverHostInput.setText("10.37.149.182");
         serverPortInput.setText("8080");
         userNameInput.setText("traviswg");
         passwordInput.setText("twerk216");
@@ -95,6 +104,22 @@ public class LoginFragment extends FragmentActivity {
 
     public void setResult(LoginResult result) {
         this.result = result;
+        if (result.isSuccessful() == true) {
+            getData(result);
+        }
+        else {
+            Toast.makeText(getApplicationContext(), "Log in Failed, Try Again",
+                    Toast.LENGTH_LONG).show();
+        }
+    }
+    public void getData(LoginResult result) {
+        String serverHost = serverHostInput.getText().toString();
+        String serverPort = serverPortInput.getText().toString();
+        String userName = userNameInput.getText().toString();
+        String password = passwordInput.getText().toString();
+        MyAsyncTask loginTask = new MyAsyncTask(serverHost, serverPort, userName, password,2,this);
+        loginTask.setAuthToken(result.getAuthToken());
+        loginTask.execute();
     }
 
     public boolean registerRadioCheck(EditText serverHostInput, EditText serverPortInput, EditText userNameInput, EditText passwordInput,

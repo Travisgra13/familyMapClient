@@ -12,6 +12,7 @@ public class EventRequest {
      * Unique user name (non-empty string)
      */
     private String userName;
+    private String authToken;
 
     public String getUserName() {
         return userName;
@@ -21,8 +22,15 @@ public class EventRequest {
         this.userName = userName;
     }
 
-    public EventRequest(String userName) {
+    public String getAuthToken() {
+        return authToken;
+    }
+
+    public EventRequest(String userName, String authToken) {
+
         this.userName = userName;
+        this.authToken = authToken;
+
     }
 
 }
