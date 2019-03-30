@@ -6,10 +6,12 @@ import android.webkit.HttpAuthHandler;
 import com.example.travis.familymapclient.Requests.EventRequest;
 import com.example.travis.familymapclient.Requests.LoginRequest;
 import com.example.travis.familymapclient.Requests.PersonRequest;
+import com.example.travis.familymapclient.Requests.RegisterRequest;
 import com.example.travis.familymapclient.Result.EventResult;
 import com.example.travis.familymapclient.Result.LoadResult;
 import com.example.travis.familymapclient.Result.LoginResult;
 import com.example.travis.familymapclient.Result.PersonResult;
+import com.example.travis.familymapclient.Result.RegisterResult;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -52,6 +54,43 @@ public class ServerProxy {
             instance = new ServerProxy();
         }
         return instance;
+    }
+
+    public RegisterResult register(RegisterRequest registerRequest) {
+        String url = "http://" + serverHost + ":" + serverPort +
+                "/user/register";
+        try {
+            URL address = new URL(url);
+            HttpURLConnection conn = (HttpURLConnection) address.openConnection();
+            conn.setReadTimeout(5000);
+            conn.setRequestMethod("POST");
+            conn.setDoOutput(true);
+            conn.connect();
+
+            JSONObject preRequestBody = new JSONObject();
+            preRequestBody.put("userName", registerRequest.getUserName());
+            preRequestBody.put("password", registerRequest.getPassword());
+            preRequestBody.put("email", registerRequest.getEmail());
+            preRequestBody.put("firstName", registerRequest.getFirstName());
+            preRequestBody.put("lastName", registerRequest.getLastName());
+            preRequestBody.put("gender", registerRequest.getGender());
+
+            OutputStream OSS = conn.getOutputStream();
+            OutputStreamWriter osw = new OutputStreamWriter(OSS, "UTF-8");
+            osw.write(preRequestBody.toString());
+            osw.flush();
+            osw.close();
+            Gson gson = new Gson();
+            RegisterResult registerResult = gson.fromJson(getResponse(conn), RegisterResult.class);
+            return registerResult;
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }catch (org.json.JSONException exc) {
+            exc.printStackTrace();
+        }catch(IOException ex) {
+            ex.printStackTrace();
+        }
+        return null;
     }
 
     public LoginResult login(LoginRequest loginRequest) {

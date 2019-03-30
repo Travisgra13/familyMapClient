@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/searchMenuItem"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:icon="@mipmap/ic_search"
+        android:title="@string/searchMenu"
+        app:showAsAction="ifRoom|withText" />
+
+    <item
+        android:id="@+id/filterMenuItem"
+        android:title="@string/filterMenu"
+        android:icon="@mipmap/ic_filter"
+        app:showAsAction="ifRoom|withText" />
+    <item
+        android:id="@+id/SettingsMenuItem"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:icon="@mipmap/ic_settings"
+        android:title="@string/settingsMenu"
+        app:showAsAction="ifRoom|withText" />
+</menu>

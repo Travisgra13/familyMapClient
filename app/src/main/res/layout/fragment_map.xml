@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/maplayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <fragment
+        android:id="@+id/map"
+        class="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginBottom="125sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="0dp">
+
+        <ImageView
+            android:paddingLeft="25dp"
+            android:paddingBottom="25dp"
+            android:layout_width="100sp"
+            android:layout_height="100sp"
+            android:src="@mipmap/ic_person" />
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/mapTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical"
+            android:textAlignment="center">
+
+            <TextView
+                android:id="@+id/personName"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="fill_vertical|center_horizontal"
+                android:textSize="30sp" />
+
+            <TextView
+                android:id="@+id/birthGender"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="fill_vertical|center_horizontal"
+                android:textSize="18sp" />
+            <TextView
+                android:id="@+id/eventType"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="fill_vertical|center_horizontal"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/eventYear"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="fill_vertical|center_horizontal"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

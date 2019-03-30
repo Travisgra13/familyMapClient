@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/loginFragLayout"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".LoginFragment">
-
     <TextView
         android:id="@+id/serverHost"
         android:layout_width="wrap_content"
@@ -230,26 +231,23 @@
         android:text="@string/signin"
         app:layout_constraintBaseline_toBaselineOf="@+id/button2"
         app:layout_constraintStart_toStartOf="parent"
-        android:clickable="false"
+        android:enabled="false"
         android:onClick="loginClick"/>
 
     <Button
         android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="7dp"
-        android:layout_marginLeft="7dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="68dp"
         android:layout_marginRight="68dp"
-        android:layout_marginBottom="16dp"
+        android:enabled="false"
+        android:onClick="registerClick"
         android:text="@string/registerer"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.473"
         app:layout_constraintTop_toBottomOf="@+id/radioGroup2"
-        app:layout_constraintVertical_bias="0.724"
-        android:clickable="false" />
+        app:layout_constraintVertical_bias="0.724" />
 
     <RadioGroup
         android:id="@+id/radioGroup2"
@@ -275,4 +273,4 @@
             android:layout_weight="1"
             android:text="@string/female" />
     </RadioGroup>
-</android.support.constraint.ConstraintLayout>
+]</android.support.constraint.ConstraintLayout>
